@@ -10,19 +10,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-
-      - name: Run broken command and capture logs
+      - name: Run broken command
         run: |
-          echo "Starting build..." > logs/error.log
-          python non_existing_script.py >> logs/error.log 2>&1
+          echo "Starting build..."
+          python non_existing_script.py 2> logs/error.log
 
       - name: Upload failure logs
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ci-failure-logs
           path: logs/error.log
