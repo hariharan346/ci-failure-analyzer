@@ -1,7 +1,6 @@
-name: Broken Pipeline Demo
+name: Broken Pipeline Demo - Phase 2
 
-on:
-  push:
+on: [push]
 
 jobs:
   build:
@@ -11,7 +10,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run broken command
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Run broken command and capture logs
         run: |
-          echo "Starting build..."
-          python non_existing_script.py
+          echo "Starting build..." > logs/error.log
+          python non_existing_script.py >> logs/error.log 2>&1
+
+      - name: Upload failure logs
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ci-failure-logs
+          path: logs/error.log
