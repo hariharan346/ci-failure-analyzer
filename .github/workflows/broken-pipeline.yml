@@ -1,0 +1,17 @@
+name: Broken Pipeline Demo
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run broken command
+        run: |
+          echo "Starting build..."
+          python non_existing_script.py
